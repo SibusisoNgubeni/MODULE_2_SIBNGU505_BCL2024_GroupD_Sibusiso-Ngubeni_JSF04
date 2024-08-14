@@ -1,82 +1,101 @@
-git<script>
+<script>
 
 </script>
 
 <template>
-
+<header>
   <nav class="container">
-      <div>
-           <img src="../assets/planet-5-logo.png" class="logo" alt="planet Logo">
-      </div>
+    <div class="logo"> 
+      <img src="../assets/planet-5-logo.png" class="logo" alt="planet Logo">
+    </div>
+    <ul class="nav-menu">
+      <li><a href="#"></a></li>
+      <li><a href="#">ProductS</a></li>
+      <li><a href="#">Offers</a></li>
+      <li><a href="#">Categoreies</a></li>
+      <li><a href="#">wishlist</a></li>
+      <li><a href="#">cart</a></li>
+    </ul>
+    <div class="hamburger-menu">&#9776;</div>
+
+    <div class="login">
+      login
+    </div>
   </nav>
+</header>
+ 
 </template>
 
 <style scoped>
-  .container {
-    background-color: #2b3843;
-    height: 72px;
-    border-radius: 10px;
-    padding: 5px;
-    display: flex;
-    align-items: center; 
-    justify-content: space-between; 
-  }
+  header {
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  height: 96px;
+}
 
-  .logo {
-    height: 60px;
-    width: 150px;
-    margin-left: 20px;
-    border-radius: 5px;
-  }
-
-  .logo-text {
-    color: rgb(56, 97, 131);
-    font-size: 30px;
-    font-weight: 600;
-    margin-left: 20px;
-  }
-
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
   
+}
 
-  @media (max-width: 1200px) {
-    .logo {
-      height: 50px;
-      width: 120px;
-    }
+.logo {
+ width: 250px;
+ height: 70px;
+ border-radius: 10px;
+}
 
-    .logo-text {
-      font-size: 26px;
-    }
+.nav-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-menu li {
+  margin-right: 20px;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+  color: #ffd700;
+}
+
+
+@media screen and (max-width: 768px) {
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    background-color: #333;
+    width: 100%;
+    text-align: center;
   }
 
-  @media (max-width: 992px) {
-    .logo {
-      height: 40px;
-      width: 100px;
-    }
-
-    .logo-text {
-      font-size: 22px;
-    }
+  .nav-menu li {
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column; 
-      align-items: center; 
-      height: auto; 
-      padding: 10px; 
-    }
-
-    .logo {
-      height: 40px;
-      width: 100px;
-      margin: 10px 0; 
-    }
-
-    .logo-text {
-      font-size: 18px;
-      margin: 0; 
-    }
+  .nav-menu a {
+    padding: 10px;
+    display: block;
   }
+
+  .hamburger-menu {
+    display: block;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}
 </style>

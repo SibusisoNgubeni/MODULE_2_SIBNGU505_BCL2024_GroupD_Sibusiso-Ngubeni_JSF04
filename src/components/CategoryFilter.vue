@@ -7,37 +7,52 @@ import { ref, onMounted, defineEmits } from 'vue';
  */
 const emit = defineEmits(['categoryChange']);
 
-
 /**
  * Reactive reference to store the list of categories.
- * @type {import('vue')}
+ * @type {import('vue').Ref<string[]>}
  */
 const categories = ref([]);
 
 /**
  * Reactive reference to store the currently selected category.
- * @type {import('vue')}
+ * @type {import('vue').Ref<string>}
  */
 const selectedCategory = ref('');
 
+const fakeStoreUrl = 'https://fakestoreapi.com/products';
+const escuelaUrl = 'https://api.escuelajs.co/api/v1/products';
+
 onMounted(async () => {
   try {
-    const response = await fetch('https://fakestoreapi.com/products');
-    if (!response.ok) {
+    // Fetch categories from Fake Store API
+    const fakestoreResponse = await fetch(fakeStoreUrl);
+    if (!fakestoreResponse.ok) {
       throw new Error('Network response was not ok');
     }
-    const products = await response.json();
-    categories.value = [...new Set(products.map(product => product.category))];
+    const fakeStoreProducts = await fakestoreResponse.json();
+    
+    // Fetch categories from Escuela API
+    const escuelaResponse = await fetch(escuelaUrl);
+    if (!escuelaResponse.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const escuelaProducts = await escuelaResponse.json();
+
+    // Extract unique categories from both APIs
+    const fakeStoreCategories = fakeStoreProducts.map(product => product.category);
+    const escuelaCategories = escuelaProducts.map(product => product.category.name);
+    const allCategories = [...new Set([...fakeStoreCategories, ...escuelaCategories])];
+
+    categories.value = allCategories;
   } catch (error) {
-    console.error('Failed to fetch products:', error);
+    console.error('Failed to fetch categories:', error);
   }
 });
-
 
 /**
  * Handles changes in the category selection dropdown.
  * Updates the selectedCategory reference and emits the categoryChange event
-   with the selected category.
+ * with the selected category.
  * @param {Event} event - The change event from the category selection dropdown.
  */
 function handleChange(event) {
@@ -48,15 +63,16 @@ function handleChange(event) {
 </script>
 
 <template>
-   <span class="category-filter">
-       <select class="selector" @change="handleChange">
-         <option value="">All Categories</option>
-         <option v-for="category in categories" :key="category" :value="category">
-           {{ category }}
-         </option>
-       </select>
-   </span>
+  <span class="category-filter">
+      <select class="selector" @change="handleChange" :value="selectedCategory">
+        <option value="">All Categories</option>
+        <option v-for="category in categories" :key="category" :value="category">
+          {{ category }}
+        </option>
+      </select>
+  </span>
 </template>
+
 
 <style scoped>
   .category-filter {

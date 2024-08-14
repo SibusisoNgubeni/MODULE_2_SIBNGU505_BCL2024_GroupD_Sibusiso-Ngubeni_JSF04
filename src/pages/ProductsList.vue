@@ -4,6 +4,14 @@ import { useRoute, useRouter } from 'vue-router';
 import { ProductStore } from '../lib/ProductStore';
 import Sorting from '../components/Sorting.vue';
 import CategoryFilter from '../components/CategoryFilter.vue';
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  product: {
+    type: Object,
+    required: true
+  }
+});
 
 const { setCategory, setSortOption, resetFilters, getCategory, getSortOption } = ProductStore();
 
@@ -19,20 +27,60 @@ const route = useRoute();
  */
 const fetchData = async (category = '', sort = '') => {
     loading.value = true;
-    const url = category
+
+    const url1 = category
         ? `https://fakestoreapi.com/products/category/${category}`
         : 'https://fakestoreapi.com/products';
+    
+    const url2 = 'https://api.escuelajs.co/api/v1/products';
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
+        const [response1, response2] = await Promise.all([
+          fetch(url1),
+          fetch(url2)
+        ]);
+
+        if (!response1.ok || !response2.ok) {
             throw new Error('Network response was not ok');
         }
-        products.value = await response.json();
-        applyFilters(sort);
+
+        const data1 = await response1.json();
+        const data2 = await response2.json();
+
+        let combinedData = [...data1, ...data2];
+   
+        if (category) {
+          combinedData = combinedData.filter(item => {
+            if (item.category && item.category.name) {
+              return item.category.name.toLowerCase() === category.toLowerCase();
+            } else if (typeof item.category === 'string') {
+              return item.category.toLowerCase() === category.toLowerCase();
+            }
+            return false;
+          });
+        }
+        
+
+
+         if (sort) {
+          combinedData = applySort(combinedData, sort);
+         }
+
+         combinedData  = combinedData.map(item => ({
+  
+            ...item, 
+            images:  item.images || [item.image]
+          
+         }));
+
+        products.value = combinedData;
+        filteredProducts.value = combinedData;
+
+        
     } catch (err) {
         console.error(err);
         products.value = [];
+        filteredProducts.value = [];
     } finally {
         loading.value = false;
     }
@@ -41,6 +89,17 @@ const fetchData = async (category = '', sort = '') => {
 /**
  * Applies filters based on the current sort option.
  */
+function applySort(data, sortOption) {
+  switch (sortOption) {
+        case 'asc':
+            return [...data].sort((a, b) => a.price - b.price);
+        case 'desc':
+            return [...data].sort((a, b) => b.price - a.price);
+        default:
+            return data;
+    }
+}
+
 function applyFilters(sort = '') {
     const filtered = [...products.value];
 
@@ -118,10 +177,10 @@ watch(() => getSortOption.value, (newSort) => {
         <div v-if="filteredProducts.length" class="product-list">
             <router-link :to="`/product/${product.id}`" v-for="product in filteredProducts" :key="product.id" class="link">
                <div  :key="product.id" class="product-card">
-                  <img :src="product.image" :alt="product.title" class="product-image">
+                  <img :src="product.images[0]" :alt="product.title" class="product-image">
                   <h2 class="product-title">{{ product.title }}</h2>
                   <p class="product-price">${{ product.price.toFixed(2) }}</p>
-                  <p class="product-category">{{ product.category }}</p>
+                  <!--<p class="product-category">{{ product.category }}</p>-->
                </div>
             </router-link>
         </div>

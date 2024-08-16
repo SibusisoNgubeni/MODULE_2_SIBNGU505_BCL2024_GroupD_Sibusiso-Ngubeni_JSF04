@@ -1,23 +1,24 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import Login from './Login.vue';
+import { useCartStore } from '../lib/CartStore';
 
+const { cart } = useCartStore();
 const isScrolledUp = ref(true);
+
 let lastScrollTop = 0;
-const headerHeight = 96; // Adjust if your header height changes
+const headerHeight = 96;
 
 const handleScroll = () => {
   const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
   
   if (currentScrollTop > lastScrollTop) {
-    // Scrolling down
     isScrolledUp.value = false;
   } else {
-    // Scrolling up
     isScrolledUp.value = true;
   }
   
-  lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // For Mobile or negative scrolling
+  lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
 };
 
 onMounted(() => {
@@ -40,13 +41,15 @@ onUnmounted(() => {
         <li><a href="#">Offers</a></li>
         <li><a href="#">Categories</a></li>
         <li><a href="#">Wishlist</a></li>
-        <li><a href="#">Cart</a></li>
+        <li><router-link to="/cart">Cart ({{ cart.length }})</router-link></li>
       </ul>
       <div class="hamburger-menu">&#9776;</div>
       <Login/>
     </nav>
   </header>
 </template>
+
+
 
 <style scoped>
 header {
@@ -55,19 +58,19 @@ header {
   border-radius: 10px;
   height: 96px;
   transition: transform 0.3s ease;
-  position: fixed; /* Ensure the header stays fixed */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* Ensure it stays on top of other content */
+  z-index: 1000; 
 }
 
 header.scrolled-down {
-  transform: translateY(-100%); /* Hide the navbar */
+  transform: translateY(-100%); 
 }
 
 header.scrolled-up {
-  transform: translateY(0); /* Show the navbar */
+  transform: translateY(0); 
 }
 
 .container {

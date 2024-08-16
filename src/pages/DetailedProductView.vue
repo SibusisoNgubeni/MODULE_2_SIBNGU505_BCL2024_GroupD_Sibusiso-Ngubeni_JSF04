@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useCartStore } from '../lib/CartStore';
 
+
+const { addToCart } = useCartStore();
 const route = useRoute();
 const product = ref(null);
 const loading = ref(true);
@@ -44,6 +47,10 @@ function getRatingStars(rate) {
     return 'empty';
   });
 }
+
+const handleAddToCart = () => {
+  addToCart(product);
+};
 </script>
 
 <template>
@@ -92,7 +99,7 @@ function getRatingStars(rate) {
           </div>
 
           <div class="product-price">$ {{ product.price }}</div>
-          <button>Add to cart</button>
+          <button @click="handleAddToCart(product)">Add to cart</button>
         </div>
       </div>
     </div>

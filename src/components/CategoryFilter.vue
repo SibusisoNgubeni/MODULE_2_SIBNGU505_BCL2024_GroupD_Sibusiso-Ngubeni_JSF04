@@ -24,21 +24,20 @@ const escuelaUrl = 'https://api.escuelajs.co/api/v1/products';
 
 onMounted(async () => {
   try {
-    // Fetch categories from Fake Store API
+    
     const fakestoreResponse = await fetch(fakeStoreUrl);
     if (!fakestoreResponse.ok) {
       throw new Error('Network response was not ok');
     }
     const fakeStoreProducts = await fakestoreResponse.json();
     
-    // Fetch categories from Escuela API
+    
     const escuelaResponse = await fetch(escuelaUrl);
     if (!escuelaResponse.ok) {
       throw new Error('Network response was not ok');
     }
     const escuelaProducts = await escuelaResponse.json();
 
-    // Extract unique categories from both APIs
     const fakeStoreCategories = fakeStoreProducts.map(product => product.category);
     const escuelaCategories = escuelaProducts.map(product => product.category.name);
     const allCategories = [...new Set([...fakeStoreCategories, ...escuelaCategories])];

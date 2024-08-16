@@ -6,7 +6,7 @@ const router = useRouter();
 
 onMounted(() => {
   localStorage.removeItem('user');
-  router.push('/login'); // Redirect to login page after logout
+  router.push('/login'); 
 });
 </script>
  

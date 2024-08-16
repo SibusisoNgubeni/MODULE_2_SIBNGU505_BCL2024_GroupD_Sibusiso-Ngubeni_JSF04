@@ -29,9 +29,9 @@ const login = async () => {
     }
 
     const data = await response.json();
-    // Store user data and token
+    
     localStorage.setItem('user', JSON.stringify(data));
-    // Redirect to home or another page
+    
     router.push('/');
   } catch (err) {
     error.value = err.message || 'An error occurred';

@@ -10,6 +10,9 @@ import DetailedProductView from '../pages/DetailedProductView.vue';
 import Login from '../components/Login.vue';
 import Logout from '../components/Logout.vue';
 import { useAuthStore } from '../lib/LoginStore';
+import Cart from '../components/Cart.vue';
+
+
 
 /**
  * Defines the routes for the application.
@@ -21,9 +24,8 @@ import { useAuthStore } from '../lib/LoginStore';
 const routes = [
     { path: '/', component: ProductList },
     { path: '/product/:id', component: DetailedProductView, props: true },
-    { path: '/cart', component: CartView, meta: { requiresAuth: true } },
-    { path: '/wishlist', component: WishlistView, meta: { requiresAuth: true } },
-    { path: '/comparison', component: ComparisonView, meta: { requiresAuth: true } },
+    
+    { path: '/cart', component: Cart, meta: { requiresAuth: true } },
     { path: '/login', component: Login },
     { path: '/logout', component: Logout },
   ];

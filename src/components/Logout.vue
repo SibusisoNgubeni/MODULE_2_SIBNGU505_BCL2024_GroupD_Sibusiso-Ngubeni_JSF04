@@ -9,7 +9,7 @@ onMounted(() => {
   router.push('/login'); // Redirect to login page after logout
 });
 </script>
-
+ 
 <template>
     <div>
       <p>Logging out...</p>

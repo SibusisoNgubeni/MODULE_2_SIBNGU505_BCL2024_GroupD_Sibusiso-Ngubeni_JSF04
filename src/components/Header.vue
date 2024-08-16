@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import Login from './Login.vue';
 
 const isScrolledUp = ref(true);
 let lastScrollTop = 0;
@@ -42,7 +43,7 @@ onUnmounted(() => {
         <li><a href="#">Cart</a></li>
       </ul>
       <div class="hamburger-menu">&#9776;</div>
-      <div class="login">Login</div>
+      <Login/>
     </nav>
   </header>
 </template>

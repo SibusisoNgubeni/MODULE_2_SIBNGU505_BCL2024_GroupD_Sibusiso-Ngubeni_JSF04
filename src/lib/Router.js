@@ -7,6 +7,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import ProductList from '../pages/ProductsList.vue';
 import DetailedProductView from '../pages/DetailedProductView.vue';
 
+import Login from '../components/Login.vue';
+import Logout from '../components/Logout.vue';
+import { useAuthStore } from '../lib/LoginStore';
+
 /**
  * Defines the routes for the application.
  * @type {Array<Object>}
@@ -16,7 +20,12 @@ import DetailedProductView from '../pages/DetailedProductView.vue';
  */
 const routes = [
     { path: '/', component: ProductList },
-    { path: '/product/:id', component: DetailedProductView, props: true }
+    { path: '/product/:id', component: DetailedProductView, props: true },
+    { path: '/cart', component: CartView, meta: { requiresAuth: true } },
+    { path: '/wishlist', component: WishlistView, meta: { requiresAuth: true } },
+    { path: '/comparison', component: ComparisonView, meta: { requiresAuth: true } },
+    { path: '/login', component: Login },
+    { path: '/logout', component: Logout },
   ];
   
   /**
@@ -26,7 +35,17 @@ const routes = [
  */
   const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+  });
+  
+  router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore();
+    if (to.meta.requiresAuth && !authStore.user.value) {
+      authStore.setLoginModalVisisble(true);
+      next(false);
+      } else {
+        next();
+    }
   });
   
   export default router;

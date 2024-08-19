@@ -78,7 +78,7 @@ function handleChange(event) {
     height: 30px;
     width: 200px;
     margin-left: auto;
-    margin-top: 50px;
+    margin-top: 150px;
     border-radius: 5px;
   }
 
@@ -89,7 +89,7 @@ function handleChange(event) {
     margin-left: auto;
     padding: 10px;
     background-color: rgb(66, 75, 86);
-    margin-top: 20px;
+    margin-top: 100px;
     border-radius: 5px;
     align-items: center; 
     justify-content: center;

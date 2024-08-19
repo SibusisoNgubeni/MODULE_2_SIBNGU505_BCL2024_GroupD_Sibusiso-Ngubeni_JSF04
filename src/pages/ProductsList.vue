@@ -151,7 +151,9 @@ const handleAddToCart = () => {
           <p class="product-price">${{ product.price.toFixed(2) }}</p>
           <button @click="handleAddToCart(product)">Add to Cart</button>
         </div>
+       
       </router-link>
+      
     </div>
     <p v-else>Loading...</p>
   </div>

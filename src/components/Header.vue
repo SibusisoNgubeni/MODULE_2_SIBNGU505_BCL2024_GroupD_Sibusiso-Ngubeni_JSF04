@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted} from 'vue';
 import Login from './Login.vue';
 import { useCartStore } from '../lib/CartStore';
 

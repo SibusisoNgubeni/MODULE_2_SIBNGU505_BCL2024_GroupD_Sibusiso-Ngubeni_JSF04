@@ -2,9 +2,15 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import Login from './Login.vue';
 import { useCartStore } from '../lib/CartStore';
+import { useComparisonStore } from '../lib/ComparisonStore';
+ 
 
+
+const { comparisonList } = useComparisonStore();
 const { cart } = useCartStore();
 const isScrolledUp = ref(true);
+const isLoggedIn = ref(false);
+const showLoginForm = ref(false);
 
 let lastScrollTop = 0;
 
@@ -19,6 +25,17 @@ const handleScroll = () => {
   
   lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
 };
+
+const handleCartClick = (event) => {
+  if (!isLoggedIn.value) {
+    event.preventDefault(); 
+    showLoginForm.value = true; 
+  } else {
+    
+  }
+};
+
+
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -35,19 +52,32 @@ onUnmounted(() => {
       <div class="logo">
         <img src="../assets/planet-5-logo.png" class="logo" alt="Planet Logo" />
       </div>
+
       <ul class="nav-menu">
-        <li><a href="#">Products</a></li>
+        <li>
+          <router-link to="/">
+             Products
+          </router-link></li>
         <li><a href="#">Offers</a></li>
-        <li><a href="#">Categories</a></li>
+        <li>
+        <router-link to="/comparison">
+          Comparison ({{ comparisonList.length }})
+        </router-link>
+      </li>
         <li><a href="#">Wishlist</a></li>
         <li>
-          <router-link to="/cart">
+          <router-link to="/cart" @click.prevent="handleCartClick">
              Cart ({{ cart.length }})
           </router-link>
         </li>
       </ul>
+
       <div class="hamburger-menu">&#9776;</div>
-      <Login />
+
+      
+      <div v-if="showLoginForm" class="login-modal">
+      <Login  @close="showLoginForm = false"/>
+    </div>
     </nav>
   </header>
 </template>

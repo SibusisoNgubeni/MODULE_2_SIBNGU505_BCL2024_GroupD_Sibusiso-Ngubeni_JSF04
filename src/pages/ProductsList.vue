@@ -5,7 +5,9 @@ import { ProductStore } from '../lib/ProductStore';
 import Sorting from '../components/Sorting.vue';
 import CategoryFilter from '../components/CategoryFilter.vue';
 import { useCartStore } from '../lib/CartStore';
+import { useComparisonStore } from '../lib/ComparisonStore';
 
+const { addToComparison, comparisonList } = useComparisonStore();
 const { addToCart } = useCartStore();
 const { setCategory, setSortOption, resetFilters, getCategory, getSortOption } = ProductStore();
 
@@ -120,6 +122,10 @@ const handleAddToCart = (product) => {
   addToCart(product);
   alert(`${product.title} has been added to your cart.`);
 };
+
+function handleAddToComparison(product) {
+  addToComparison(product);
+}
 </script>
 
 <template>
@@ -137,12 +143,22 @@ const handleAddToCart = (product) => {
           <p class="product-price">${{ product.price.toFixed(2) }}</p>
         </router-link>
         <button @click="handleAddToCart(product)">Add to Cart</button>
+        <button @click="handleAddToComparison(product)">Add to Comparison</button>
       </div>
     </div>
 
     <p v-else>No products available.</p>
+
+   
+    <div>
+      
+      <ul>
+        <li v-for="item in comparisonList" :key="item.id">{{ item.title }}</li>
+      </ul>
+    </div>
   </div>
 </template>
+
 
 <style scoped>
 .link{

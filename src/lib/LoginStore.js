@@ -2,17 +2,15 @@ import { ref } from 'vue';
 
 export const useAuthStore = () => {
   const user = ref(JSON.parse(localStorage.getItem('user')));
-  const error = ref(null);
+  const showLoginModal = ref(false);
 
   const login = (userData) => {
-    if (userData.username === 'correctUsername' && userData.password === 'correctPassword') {
+    if (userData.username === 'mor_2314' && userData.password === '83r5^_') {
       user.value = userData;
       localStorage.setItem('user', JSON.stringify(userData));
-      error.value = null;
-      return { success: true, message: 'Login successful!' };
+      showLoginModal.value = false;
     } else {
-      error.value = 'Invalid username or password';
-      return { success: false, message: error.value };
+      showLoginModal.value = true;
     }
   };
 
@@ -21,10 +19,15 @@ export const useAuthStore = () => {
     localStorage.removeItem('user');
   };
 
+  const setLoginModalVisible = (isVisible) => {
+    showLoginModal.value = isVisible;
+  };
+
   return {
     user,
     login,
     logout,
-    error,
+    showLoginModal,
+    setLoginModalVisible,
   };
 };

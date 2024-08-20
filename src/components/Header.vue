@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted} from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import Login from './Login.vue';
 import { useCartStore } from '../lib/CartStore';
 
@@ -7,7 +7,6 @@ const { cart } = useCartStore();
 const isScrolledUp = ref(true);
 
 let lastScrollTop = 0;
-const headerHeight = 96;
 
 const handleScroll = () => {
   const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -34,21 +33,24 @@ onUnmounted(() => {
   <header :class="{ 'scrolled-up': isScrolledUp, 'scrolled-down': !isScrolledUp }">
     <nav class="container">
       <div class="logo">
-        <img src="../assets/planet-5-logo.png" class="logo" alt="planet Logo">
+        <img src="../assets/planet-5-logo.png" class="logo" alt="Planet Logo" />
       </div>
       <ul class="nav-menu">
         <li><a href="#">Products</a></li>
         <li><a href="#">Offers</a></li>
         <li><a href="#">Categories</a></li>
         <li><a href="#">Wishlist</a></li>
-        <li><router-link to="/cart">Cart ({{ cart.length }})</router-link></li>
+        <li>
+          <router-link to="/cart">
+             Cart ({{ cart.length }})
+          </router-link>
+        </li>
       </ul>
       <div class="hamburger-menu">&#9776;</div>
-      <Login/>
+      <Login />
     </nav>
   </header>
 </template>
-
 
 
 <style scoped>

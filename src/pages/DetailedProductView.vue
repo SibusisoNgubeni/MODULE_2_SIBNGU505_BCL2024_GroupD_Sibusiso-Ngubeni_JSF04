@@ -3,7 +3,6 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCartStore } from '../lib/CartStore';
 
-
 const { addToCart } = useCartStore();
 const route = useRoute();
 const product = ref(null);
@@ -13,12 +12,14 @@ const error = ref(null);
 const apiBaseUrl = route.query.api || 'fakestore';
 
 const fetchProduct = async () => {
-  const id = route.params.id;
+  let id = parseInt(route.params.id, 10);
   let url = '';
 
   if (apiBaseUrl === 'fakestore') {
     url = `https://fakestoreapi.com/products/${id}`;
   } else if (apiBaseUrl === 'escuela') {
+   
+    id -= 20;
     url = `https://api.escuelajs.co/api/v1/products/${id}`;
   }
 
@@ -48,10 +49,11 @@ function getRatingStars(rate) {
   });
 }
 
-const handleAddToCart = () => {
+const handleAddToCart = (product) => {
   addToCart(product);
 };
 </script>
+
 
 <template>
   <div>

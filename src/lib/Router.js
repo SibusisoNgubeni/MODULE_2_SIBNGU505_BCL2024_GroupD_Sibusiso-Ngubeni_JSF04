@@ -24,8 +24,7 @@ import Cart from '../components/Cart.vue';
 const routes = [
     { path: '/', component: ProductList },
     { path: '/product/:id', component: DetailedProductView, props: true },
-    
-    { path: '/cart', component: Cart, meta: { requiresAuth: true } },
+    { path: '/cart', component: Cart},
     { path: '/login', component: Login },
     { path: '/logout', component: Logout },
   ];

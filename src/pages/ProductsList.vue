@@ -4,17 +4,9 @@ import { useRoute, useRouter } from 'vue-router';
 import { ProductStore } from '../lib/ProductStore';
 import Sorting from '../components/Sorting.vue';
 import CategoryFilter from '../components/CategoryFilter.vue';
-import { defineProps } from 'vue';
 import { useCartStore } from '../lib/CartStore';
 
 const { addToCart } = useCartStore();
-const props = defineProps({
-  product: {
-    type: Object,
-    required: true,
-  },
-});
-
 const { setCategory, setSortOption, resetFilters, getCategory, getSortOption } = ProductStore();
 
 const products = ref([]);
@@ -39,7 +31,12 @@ const fetchData = async (category = '', sort = '') => {
     }
 
     const data1 = await response1.json();
-    const data2 = await response2.json();
+    let data2 = await response2.json();
+
+    data2 = data2.map(item => ({
+      ...item,
+      id: item.id + 20,
+    }));
 
     let combinedData = [...data1, ...data2];
 
@@ -75,26 +72,11 @@ const fetchData = async (category = '', sort = '') => {
 };
 
 function applySort(data, sortOption) {
-  switch (sortOption) {
-    case 'asc':
-      return [...data].sort((a, b) => a.price - b.price);
-    case 'desc':
-      return [...data].sort((a, b) => b.price - a.price);
-    default:
-      return data;
-  }
-}
-
-function applyFilters(sort = '') {
-  const filtered = [...products.value];
-
-  if (sort === 'asc') {
-    filtered.sort((a, b) => a.price - b.price);
-  } else if (sort === 'desc') {
-    filtered.sort((a, b) => b.price - a.price);
-  }
-
-  filteredProducts.value = filtered;
+  return [...data].sort((a, b) => {
+    if (sortOption === 'asc') return a.price - b.price;
+    if (sortOption === 'desc') return b.price - a.price;
+    return 0;
+  });
 }
 
 function handleCategoryChange(category) {
@@ -106,7 +88,7 @@ function handleCategoryChange(category) {
 function handleSortChange(option) {
   setSortOption(option);
   router.push({ query: { ...route.query, sort: option } });
-  applyFilters(option);
+  fetchData(getCategory.value, option);
 }
 
 function handleReset() {
@@ -126,16 +108,17 @@ onMounted(() => {
   fetchData(getCategory.value, getSortOption.value);
 });
 
-watch(() => getCategory.value, newCategory => {
+watch(() => getCategory.value, (newCategory) => {
   fetchData(newCategory, getSortOption.value);
 });
 
-watch(() => getSortOption.value, newSort => {
-  applyFilters(newSort);
+watch(() => getSortOption.value, (newSort) => {
+  fetchData(getCategory.value, newSort);
 });
 
-const handleAddToCart = () => {
+const handleAddToCart = (product) => {
   addToCart(product);
+  alert(`${product.title} has been added to your cart.`);
 };
 </script>
 
@@ -143,22 +126,23 @@ const handleAddToCart = () => {
   <div>
     <CategoryFilter @categoryChange="handleCategoryChange" />
     <Sorting @sortChange="handleSortChange" @reset="handleReset" />
-    <div v-if="filteredProducts.length" class="product-list">
-      <router-link :to="`/product/${product.id}`" v-for="product in filteredProducts" :key="product.id" class="link">
-        <div :key="product.id" class="product-card">
+    
+    <div v-if="loading">Loading...</div>
+
+    <div v-else-if="filteredProducts.length" class="product-list">
+      <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+        <router-link :to="`/product/${product.id}`" class="link">
           <img :src="product.images[0]" :alt="product.title" class="product-image" />
           <h2 class="product-title">{{ product.title }}</h2>
           <p class="product-price">${{ product.price.toFixed(2) }}</p>
-          <button @click="handleAddToCart(product)">Add to Cart</button>
-        </div>
-       
-      </router-link>
-      
+        </router-link>
+        <button @click="handleAddToCart(product)">Add to Cart</button>
+      </div>
     </div>
-    <p v-else>Loading...</p>
+
+    <p v-else>No products available.</p>
   </div>
 </template>
-
 
 <style scoped>
 .link{

@@ -1,113 +1,87 @@
+<!-- src/components/LoginModal.vue -->
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useAuthStore } from '../lib/LoginStore';
+import { useRouter, useRoute } from 'vue-router';
 
-const showLoginForm = ref(false);
-const show404 = ref(false);
-const isLoggedIn = ref(false);
-const successMessage = ref('');
-
-const toggleLoginForm = () => {
-  if (isLoggedIn.value) {
-    logout();
-  } else {
-    showLoginForm.value = !showLoginForm.value;
-  }
-};
-
+const authStore = useAuthStore();
+const router = useRouter();
+const route = useRoute();
 const username = ref('');
 const password = ref('');
-const loading = ref(false);
+const passwordVisible = ref(false);
+const isLoading = ref(false);
+let redirectRoute = null;
 
+onMounted(() => {
+  redirectRoute = route.fullPath; 
+});
 
-const handleLogin = () => {
-  // Replace with your actual login logic
-  const isSuccess = true; // Assume login is successful for demonstration
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 
-  if (isSuccess) {
-    // Emit a custom event to notify the parent component
-    emit('login-success');
+const login = async () => {
+  if (!username.value || !password.value) {
+    authStore.errorMessage = 'Username and password cannot be empty';
+    return;
+  }
+  isLoading.value = true;
+  try {
+    await authStore.login(username.value, password.value);
+    isLoading.value = false;
+    username.value = '';
+    password.value = '';
+    if (authStore.user) {
+      router.push(redirectRoute || '/');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    isLoading.value = false;
   }
 };
-const login = () => {
-  loading.value = true;
 
-  setTimeout(() => {
-    if (username.value === 'mor_2314' && password.value === '83r5^_') {
-      loading.value = false;
-      isLoggedIn.value = true;
-      show404.value = false;
-      successMessage.value = 'Logged in successfully!';
-      
-      setTimeout(() => {
-        showLoginForm.value = false;
-        successMessage.value = '';
-      }, 3000);
-
-      username.value = '';
-      password.value = '';
-    } else {
-      loading.value = false;
-      show404.value = true;
-      isLoggedIn.value = false;
-    }
-  }, 1000);
-};
-
-const logout = () => {
-  isLoggedIn.value = false;
-  successMessage.value = 'Logged out successfully!';
-
-  setTimeout(() => {
-    successMessage.value = '';
-  }, 3000);
+const handleLoginModalClose = () => {
+  authStore.setLoginModalVisible(false);
 };
 </script>
 
 <template>
-  <div>
-    <header v-if="!show404">
-      <nav>
-        <ul class="nav-menu">
-          <li>
-            <button @click="toggleLoginForm">
-              {{ isLoggedIn ? 'Logout' : 'Login' }}
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </header>
-
-    
-    <div v-if="showLoginForm" class="login-modal">
-      
-      <div v-if="successMessage" class="success-message">
-        {{ successMessage }}
-      </div>
-
-     
-      <div v-if="!isLoggedIn && !successMessage">
-        <div class="login-form">
-          <h2>Login</h2>
-          <form @submit.prevent="login">
-            <div>
-              <label for="username">Username:</label>
-              <input v-model="username" type="text" id="username" required />
-            </div>
-            <div>
-              <label for="password">Password:</label>
-              <input v-model="password" type="password" id="password" required />
-            </div>
-            <button @click="handleLogin">Login</button>
-          </form>
-        </div>
-        <div v-if="show404" class="error-404">
-          <p>The page you're looking for does not exist.</p>
-        </div>
-      </div>
+  <div v-if="authStore.showLoginModal" class="login-modal">
+    <div v-if="authStore.errorMessage" class="error-message">
+      {{ authStore.errorMessage }}
     </div>
-    
+    <div class="login-form">
+      <h2>Login</h2>
+      <form @submit.prevent="login">
+        <div>
+          <label for="username">Username:</label>
+          <input v-model="username" type="text" id="username" required />
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input
+            :type="passwordVisible ? 'text' : 'password'"
+            v-model="password"
+            id="password"
+            required
+          />
+          <label>
+            <input type="checkbox" @click="togglePasswordVisibility" />
+            Show Password
+          </label>
+        </div>
+        <button type="submit" :disabled="isLoading">Login</button>
+        <p v-if="isLoading">Authenticating...</p>
+      </form>
+      <button @click="handleLoginModalClose">Close</button>
+    </div>
   </div>
 </template>
+
+
+
+
 
 <style scoped>
 .login-modal {

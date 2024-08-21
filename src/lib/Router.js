@@ -11,17 +11,14 @@ import Logout from '../components/Logout.vue';
 import { useAuthStore } from '../lib/LoginStore';
 import Cart from '../components/Cart.vue';
 import ComparisonPage from '../pages/ComparisonPage.vue';
-import WishListPage from '../pages/WishListPage.vue';
-
 
 const routes = [
   { path: '/', component: ProductList },
   { path: '/product/:id', component: DetailedProductView, props: true },
-  { path: '/cart', component: Cart }, 
-  { path: '/comparison', component: ComparisonPage }, 
+  { path: '/cart', component: Cart, meta: { requiresAuth: true } }, 
+  { path: '/comparison', component: ComparisonPage, meta: { requiresAuth: true } }, 
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },
-  { path: '/wishlist', component: WishListPage },
 ];
 
 
@@ -30,6 +27,16 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  if (to.meta.requiresAuth && !authStore.user.value) {
+    console.log(authStore);
+    authStore.setLoginModalVisible(true);
+    next(false);
+  } else {
+    next();
+  }
+});
 
 export default router;
 

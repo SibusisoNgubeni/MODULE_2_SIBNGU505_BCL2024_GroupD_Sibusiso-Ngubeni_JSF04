@@ -12,9 +12,9 @@ const { cart } = useCartStore();
 const isScrolledUp = ref(true);
 const isLoggedIn = ref(false);
 const showLoginForm = ref(false);
-const redirectTo = ref(''); // Store the route to redirect after login
+const redirectTo = ref(''); 
 
-const router = useRouter(); // Use the router for navigation
+const router = useRouter(); 
 
 let lastScrollTop = 0;
 
@@ -34,7 +34,7 @@ const handleCartClick = (event) => {
   if (!isLoggedIn.value) {
     event.preventDefault(); 
     showLoginForm.value = true; 
-    redirectTo.value = '/cart'; // Store the intended route
+    redirectTo.value = '/cart'; 
   } else {
     router.push('/cart');
   }
@@ -44,7 +44,7 @@ const handleComparisonClick = (event) => {
   if (!isLoggedIn.value) {
     event.preventDefault(); 
     showLoginForm.value = true; 
-    redirectTo.value = '/comparison'; // Store the intended route
+    redirectTo.value = '/comparison'; 
   } else {
     router.push('/comparison');
   }
@@ -55,7 +55,7 @@ const handleLoginSuccess = () => {
   showLoginForm.value = false;
   if (redirectTo.value) {
     router.push(redirectTo.value);
-    redirectTo.value = ''; // Reset after redirect
+    redirectTo.value = ''; 
   }
 };
 

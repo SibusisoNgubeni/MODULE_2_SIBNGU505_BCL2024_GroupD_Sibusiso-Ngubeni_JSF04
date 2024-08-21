@@ -2,61 +2,67 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import Login from './Login.vue';
+import SkeletonLoader from './SkeletonLoader.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
 
-
-
 const { comparisonList } = useComparisonStore();
 const { cart } = useCartStore();
-const isScrolledUp = ref(true);
 const isLoggedIn = ref(false);
 const showLoginForm = ref(false);
-const redirectTo = ref(''); 
+const redirectTo = ref('');
+const isScrolledUp = ref(true);
+const showSkeleton = ref(false);
 
-const router = useRouter(); 
-
+const router = useRouter();
 let lastScrollTop = 0;
 
 const handleScroll = () => {
   const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  
-  if (currentScrollTop > lastScrollTop) {
-    isScrolledUp.value = false;
-  } else {
-    isScrolledUp.value = true;
-  }
-  
+  isScrolledUp.value = currentScrollTop <= lastScrollTop;
   lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
 };
 
 const handleCartClick = (event) => {
   if (!isLoggedIn.value) {
-    event.preventDefault(); 
-    showLoginForm.value = true; 
-    redirectTo.value = '/cart'; 
-  } else {
-    router.push('/cart');
+    event.preventDefault();
+    showLoginForm.value = true;
+    redirectTo.value = '/cart';
+    showSkeleton.value = true;
+  }
+};
+
+const handleWishlistClick = (event) => {
+  if (!isLoggedIn.value) {
+    event.preventDefault();
+    showLoginForm.value = true;
+    redirectTo.value = '/wishlist';
+    showSkeleton.value = true;
   }
 };
 
 const handleComparisonClick = (event) => {
   if (!isLoggedIn.value) {
-    event.preventDefault(); 
-    showLoginForm.value = true; 
-    redirectTo.value = '/comparison'; 
-  } else {
-    router.push('/comparison');
+    event.preventDefault();
+    showLoginForm.value = true;
+    redirectTo.value = '/comparison';
+    showSkeleton.value = true;
   }
 };
 
 const handleLoginSuccess = () => {
   isLoggedIn.value = true;
   showLoginForm.value = false;
+  showSkeleton.value = false; // Hide skeleton loader
   if (redirectTo.value) {
     router.push(redirectTo.value);
-    redirectTo.value = ''; 
+    redirectTo.value = '';
   }
+};
+
+const closeLoginModal = () => {
+  showLoginForm.value = false;
+  showSkeleton.value = false; // Hide skeleton loader if login is cancelled
 };
 
 onMounted(() => {
@@ -76,40 +82,31 @@ onUnmounted(() => {
       </div>
 
       <ul class="nav-menu">
-        <li>
-          <router-link to="/">
-             Products
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/discounted-products">
-           Offers
-          </router-link>
-        </li>
+        <li><router-link to="/" >Products</router-link></li>
+        <li><router-link to="/discounted-products">Offers</router-link></li>
         <li>
           <router-link to="/comparison" @click.prevent="handleComparisonClick">
             Comparison ({{ comparisonList.length }})
           </router-link>
         </li>
         <li>
-          <router-link to="/wishlist">
-           wishlist
+          <router-link to="/wishlist" @click.prevent="handleWishlistClick">
+            Wishlist
           </router-link>
         </li>
-
         <li>
           <router-link to="/cart" @click.prevent="handleCartClick">
-             Cart ({{ cart.length }})
+            Cart ({{ cart.length }})
           </router-link>
         </li>
       </ul>
 
-      <div class="hamburger-menu">&#9776;</div>
-      
-      <div v-if="showLoginForm" class="login-modal">
-        <Login @login-success="handleLoginSuccess" @close="showLoginForm = false"/>
+      <div v-if="showLoginForm">
+        <Login @login-success="handleLoginSuccess" @close="closeLoginModal" />
       </div>
     </nav>
+
+    <SkeletonLoader :show="showSkeleton" />
   </header>
 </template>
 
@@ -129,6 +126,28 @@ header {
   width: 100%;
   z-index: 1000; 
 }
+
+/* Add to your global CSS file or component-specific CSS */
+.skeleton-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.skeleton-content {
+  width: 60%;
+  height: 60%;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
 
 header.scrolled-down {
   transform: translateY(-100%); 

@@ -1,80 +1,50 @@
-<!-- src/components/LoginModal.vue -->
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useAuthStore } from '../lib/LoginStore';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, defineEmits } from 'vue';
 
-const authStore = useAuthStore();
-const router = useRouter();
-const route = useRoute();
+const emit = defineEmits(['login-success', 'close']);
 const username = ref('');
 const password = ref('');
-const passwordVisible = ref(false);
-const isLoading = ref(false);
-let redirectRoute = null;
+const loading = ref(false);
+const errorMessage = ref('');
 
-onMounted(() => {
-  redirectRoute = route.fullPath; 
-});
+const handleLogin = () => {
+  loading.value = true;
 
-const togglePasswordVisibility = () => {
-  passwordVisible.value = !passwordVisible.value;
-};
+  // Simulate login logic (replace with actual login logic)
+  setTimeout(() => {
+    const isSuccess = (username.value === 'mor_2314' && password.value === '83r5^_');
 
-const login = async () => {
-  if (!username.value || !password.value) {
-    authStore.errorMessage = 'Username and password cannot be empty';
-    return;
-  }
-  isLoading.value = true;
-  try {
-    await authStore.login(username.value, password.value);
-    isLoading.value = false;
-    username.value = '';
-    password.value = '';
-    if (authStore.user) {
-      router.push(redirectRoute || '/');
+    if (isSuccess) {
+      emit('login-success');
+    } else {
+      errorMessage.value = 'Invalid username or password';
+      loading.value = false;
     }
-  } catch (error) {
-    console.error('Login error:', error);
-    isLoading.value = false;
-  }
+  }, 1000); // Simulating async operation
 };
 
-const handleLoginModalClose = () => {
-  authStore.setLoginModalVisible(false);
+const closeLogin = () => {
+  emit('close');
 };
 </script>
 
 <template>
-  <div v-if="authStore.showLoginModal" class="login-modal">
-    <div v-if="authStore.errorMessage" class="error-message">
-      {{ authStore.errorMessage }}
-    </div>
-    <div class="login-form">
+  <div class="login-modal">
+    <div class="modal-content">
       <h2>Login</h2>
-      <form @submit.prevent="login">
+      <p v-if="errorMessage">{{ errorMessage }}</p>
+      <form @submit.prevent="handleLogin">
         <div>
           <label for="username">Username:</label>
           <input v-model="username" type="text" id="username" required />
         </div>
         <div>
           <label for="password">Password:</label>
-          <input
-            :type="passwordVisible ? 'text' : 'password'"
-            v-model="password"
-            id="password"
-            required
-          />
-          <label>
-            <input type="checkbox" @click="togglePasswordVisibility" />
-            Show Password
-          </label>
+          <input v-model="password" type="password" id="password" required />
         </div>
-        <button type="submit" :disabled="isLoading">Login</button>
-        <p v-if="isLoading">Authenticating...</p>
+        <button type="submit" :disabled="loading">Login</button>
+        <button type="button" @click="closeLogin">Close</button>
       </form>
-      <button @click="handleLoginModalClose">Close</button>
     </div>
   </div>
 </template>

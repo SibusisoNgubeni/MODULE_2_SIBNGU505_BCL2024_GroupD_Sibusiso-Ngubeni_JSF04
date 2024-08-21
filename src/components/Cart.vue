@@ -161,7 +161,7 @@ const decreaseQuantity = (item) => {
     margin-left: 20px;
     padding: 8px 12px;
     border: none;
-    background-color: #ff4d4d;
+    background-color: #333;
     color: #fff;
     font-size: 14px;
     cursor: pointer;
@@ -169,7 +169,7 @@ const decreaseQuantity = (item) => {
   }
   
   .remove-button:hover {
-    background-color: #e60000;
+    background-color: #333;
   }
   
   .cart-summary {
@@ -201,13 +201,13 @@ const decreaseQuantity = (item) => {
   }
   
   .checkout-button {
-    background-color: #007bff;
+    background-color: #333;
     color: #fff;
     margin-left: 10px;
   }
   
   .checkout-button:hover {
-    background-color: #0056b3;
+    background-color: #333;
   }
   .item-total-price {
   margin-top: 8px;

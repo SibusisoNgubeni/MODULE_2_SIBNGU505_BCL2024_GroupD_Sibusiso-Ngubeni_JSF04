@@ -3,10 +3,9 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import Login from './Login.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
- 
-
 
 const { comparisonList } = useComparisonStore();
+
 const { cart } = useCartStore();
 const isScrolledUp = ref(true);
 const isLoggedIn = ref(false);

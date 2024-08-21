@@ -13,7 +13,7 @@ function handleClear() {
 </script>
 
 <template>
-  <div>
+  <div class="comparison-page">
     <h1>Comparison Page</h1>
     <button @click="handleClear">Clear Comparison List</button>
 
@@ -30,7 +30,7 @@ function handleClear() {
             <button @click="handleRemove(product.id)">Remove</button>
           </td>
           <td v-for="product in comparisonList" :key="'image-' + product.id">
-            <img :src="product.image" :alt="product.title" class="comparison-image" />
+            <img :src="product.images[0]" :alt="product.title" class="comparison-image" />
           </td>
         </tr>
         <tr>
@@ -52,7 +52,12 @@ function handleClear() {
   </div>
 </template>
 
+
 <style scoped>
+
+.comparison-page{
+    margin-top: 100px;
+}
 .comparison-image {
   max-width: 100px; 
   height: auto;

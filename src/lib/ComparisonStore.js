@@ -1,11 +1,11 @@
 import { ref } from 'vue';
 
+const comparisonList = ref([]);
+
 export const useComparisonStore = () => {
-  const comparisonList = ref([]);
 
   const addToComparison = (product) => {
-    const exists = comparisonList.value.some(item => item.id === product.id);
-    if (!exists) {
+    if (!comparisonList.value.some(item => item.id === product.id)) {
       comparisonList.value.push(product);
       alert(`${product.title} has been added to your comparison list.`);
     } else {
@@ -13,9 +13,18 @@ export const useComparisonStore = () => {
     }
   };
 
+  const removeFromComparison = (productId) => {
+    comparisonList.value = comparisonList.value.filter(item => item.id !== productId);
+  };
+
+  const clearComparison = () => {
+    comparisonList.value = [];
+  };
+
   return {
     comparisonList,
-    addToComparison
+    addToComparison,
+    removeFromComparison,
+    clearComparison,
   };
 };
-

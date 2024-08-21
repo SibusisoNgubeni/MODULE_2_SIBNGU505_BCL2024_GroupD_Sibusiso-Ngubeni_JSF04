@@ -15,7 +15,7 @@ import ComparisonPage from '../pages/ComparisonPage.vue';
 const routes = [
   { path: '/', component: ProductList },
   { path: '/product/:id', component: DetailedProductView, props: true },
-  { path: '/cart', component: Cart, meta: { requiresAuth: true} },
+  { path: '/cart', component: Cart },
   { path: '/comparison', component: ComparisonPage},
   { path: '/login', component: Login },
   { path: '/logout', component: Logout },

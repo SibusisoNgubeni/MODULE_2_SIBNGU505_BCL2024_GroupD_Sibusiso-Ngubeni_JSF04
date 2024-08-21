@@ -67,7 +67,9 @@ onUnmounted(() => {
   <header :class="{ 'scrolled-up': isScrolledUp, 'scrolled-down': !isScrolledUp }">
     <nav class="container">
       <div class="logo">
+      <router-link to="/">
         <img src="../assets/planet-5-logo.png" class="logo" alt="Planet Logo" />
+      </router-link>
       </div>
 
       <ul class="nav-menu">

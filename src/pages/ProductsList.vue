@@ -220,6 +220,38 @@ function handleAddToComparison(product) {
   font-size: 20px;
   color: #777;
 }
+button {
+  width: 200px;
+  background-color: #211f24;
+  color: #ffffff;
+  border: none;
+
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+
+  margin: 1px;
+}
+
+button:hover {
+  background-color: #3700b3;
+  transform: translateY(-2px);
+}
+
+button:active {
+  background-color: #3700b3;
+  transform: translateY(0);
+}
+
+button:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
 
 
 @media (max-width: 1200px) {

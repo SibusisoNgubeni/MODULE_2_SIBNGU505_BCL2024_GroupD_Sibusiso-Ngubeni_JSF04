@@ -6,7 +6,7 @@ import Sorting from '../components/Sorting.vue';
 import CategoryFilter from '../components/CategoryFilter.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
-import { useWishlistStore } from '../lib/wishlistStore';
+import { useWishlistStore } from '../lib/WishListStore';
 
 
 const { addToWishlist } = useWishlistStore();

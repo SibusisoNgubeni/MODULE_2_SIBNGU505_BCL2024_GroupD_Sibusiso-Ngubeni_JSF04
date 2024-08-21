@@ -74,7 +74,7 @@ table {
 
 /* Table header styling */
 th {
-  background-color: #4CAF50;
+  background-color: #333;
   color: white;
   font-weight: bold;
   padding: 15px;
@@ -116,7 +116,7 @@ img:hover {
 
 /* Button styling */
 button {
-  background-color: #4CAF50;
+  background-color: #333;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -126,7 +126,7 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #333;
 }
 
 /* Responsive design adjustments */

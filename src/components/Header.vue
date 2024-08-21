@@ -23,46 +23,33 @@ const handleScroll = () => {
   lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
 };
 
-const handleCartClick = (event) => {
+const handleNavigation = (path) => {
   if (!isLoggedIn.value) {
-    event.preventDefault();
     showLoginForm.value = true;
-    redirectTo.value = '/cart';
+    redirectTo.value = path;
     showSkeleton.value = true;
+  } else {
+    router.push(path);
   }
 };
 
-const handleWishlistClick = (event) => {
-  if (!isLoggedIn.value) {
-    event.preventDefault();
-    showLoginForm.value = true;
-    redirectTo.value = '/wishlist';
-    showSkeleton.value = true;
-  }
-};
+const handleCartClick = () => handleNavigation('/cart');
+const handleWishlistClick = () => handleNavigation('/wishlist');
+const handleComparisonClick = () => handleNavigation('/comparison');
 
-const handleComparisonClick = (event) => {
-  if (!isLoggedIn.value) {
-    event.preventDefault();
-    showLoginForm.value = true;
-    redirectTo.value = '/comparison';
-    showSkeleton.value = true;
-  }
-};
 
 const handleLoginSuccess = () => {
   isLoggedIn.value = true;
   showLoginForm.value = false;
-  showSkeleton.value = false; // Hide skeleton loader
+  showSkeleton.value = false;
   if (redirectTo.value) {
     router.push(redirectTo.value);
     redirectTo.value = '';
   }
 };
-
 const closeLoginModal = () => {
   showLoginForm.value = false;
-  showSkeleton.value = false; // Hide skeleton loader if login is cancelled
+  showSkeleton.value = false;
 };
 
 onMounted(() => {
@@ -72,6 +59,8 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
+
+
 </script>
 
 <template>
@@ -127,7 +116,6 @@ header {
   z-index: 1000; 
 }
 
-/* Add to your global CSS file or component-specific CSS */
 .skeleton-overlay {
   position: fixed;
   top: 0;

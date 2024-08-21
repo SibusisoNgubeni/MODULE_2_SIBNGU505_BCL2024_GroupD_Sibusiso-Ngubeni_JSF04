@@ -1,4 +1,5 @@
-<script setup>
+
+ <script setup>
 import { useWishlistStore } from '../lib/WishlistStore';
 import { useCartStore } from '../lib/cartStore'; 
 const { items, removeFromWishlist, clearWishlist } = useWishlistStore();
@@ -49,11 +50,11 @@ const { addToCart } = useCartStore();
 h1 {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: #f1efef;
 }
 
 button {
-  background-color: #4CAF50;
+  background-color: #333;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -64,7 +65,7 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #333;
 }
 table {
   width: 100%;
@@ -77,7 +78,7 @@ table {
 }
 
 thead {
-  background-color: #4CAF50;
+  background-color: #333;
   color: white;
 }
 
@@ -112,4 +113,4 @@ p {
 }
 
   </style>
-  
+   

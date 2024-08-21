@@ -50,7 +50,7 @@ const { addToCart } = useCartStore();
 h1 {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #f1efef;
+  color: #2a2828;
 }
 
 button {

@@ -74,7 +74,7 @@ onUnmounted(() => {
 
       <ul class="nav-menu">
         <li><router-link to="/" >Products</router-link></li>
-        <li><router-link to="/discounted-products">Offers</router-link></li>
+        <li>Offers</li>
         <li>
           <router-link to="/comparison" @click.prevent="handleComparisonClick">
             Comparison ({{ comparisonList.length }})

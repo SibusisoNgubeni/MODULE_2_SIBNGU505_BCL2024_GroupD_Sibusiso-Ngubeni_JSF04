@@ -2,18 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCartStore } from '../lib/CartStore';
-import { useComparisonStore } from '../lib/ComparisonStore';
-import { useWishlistStore } from '../lib/WishListStore';
 
 
-const { addToWishlist } = useWishlistStore();
-
-const props = defineProps({
-  product: Object,
-});
-
-
-const { addToComparison, comparisonList } = useComparisonStore();
 const { addToCart } = useCartStore();
 const route = useRoute();
 const product = ref(null);
@@ -70,12 +60,7 @@ function getRatingStars(rate) {
 
 const handleAddToCart = (product) => {
   addToCart(product);
-  alert(`${product.title} has been added to your cart.`);
 };
-
-function handleAddToComparison(product) {
-  addToComparison(product);
-}
 </script>
 
 <template>
@@ -136,8 +121,6 @@ function handleAddToComparison(product) {
           </div>
 
           <button @click="handleAddToCart(product)">Add to cart</button>
-        <button @click="handleAddToComparison(product)">Add to Comparison</button>
-        <button @click="addToWishlist(product)">Add to Wishlist</button>
         </div>
       </div>
     </div>

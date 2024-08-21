@@ -6,6 +6,15 @@ import Sorting from '../components/Sorting.vue';
 import CategoryFilter from '../components/CategoryFilter.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
+import { useWishlistStore } from '../lib/wishlistStore';
+
+
+const { addToWishlist } = useWishlistStore();
+
+const props = defineProps({
+  product: Object,
+});
+
 
 const { addToComparison, comparisonList } = useComparisonStore();
 const { addToCart } = useCartStore();
@@ -144,6 +153,7 @@ function handleAddToComparison(product) {
         </router-link>
         <button @click="handleAddToCart(product)">Add to Cart</button>
         <button @click="handleAddToComparison(product)">Add to Comparison</button>
+        <button @click="addToWishlist(product)">Add to Wishlist</button>
       </div>
     </div>
 

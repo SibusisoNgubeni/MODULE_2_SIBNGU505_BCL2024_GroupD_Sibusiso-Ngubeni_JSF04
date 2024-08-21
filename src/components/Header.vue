@@ -1,15 +1,20 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
 import Login from './Login.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
 
-const { comparisonList } = useComparisonStore();
 
+
+const { comparisonList } = useComparisonStore();
 const { cart } = useCartStore();
 const isScrolledUp = ref(true);
 const isLoggedIn = ref(false);
 const showLoginForm = ref(false);
+const redirectTo = ref(''); // Store the route to redirect after login
+
+const router = useRouter(); // Use the router for navigation
 
 let lastScrollTop = 0;
 
@@ -29,12 +34,30 @@ const handleCartClick = (event) => {
   if (!isLoggedIn.value) {
     event.preventDefault(); 
     showLoginForm.value = true; 
+    redirectTo.value = '/cart'; // Store the intended route
   } else {
-    
+    router.push('/cart');
   }
 };
 
+const handleComparisonClick = (event) => {
+  if (!isLoggedIn.value) {
+    event.preventDefault(); 
+    showLoginForm.value = true; 
+    redirectTo.value = '/comparison'; // Store the intended route
+  } else {
+    router.push('/comparison');
+  }
+};
 
+const handleLoginSuccess = () => {
+  isLoggedIn.value = true;
+  showLoginForm.value = false;
+  if (redirectTo.value) {
+    router.push(redirectTo.value);
+    redirectTo.value = ''; // Reset after redirect
+  }
+};
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -56,14 +79,24 @@ onUnmounted(() => {
         <li>
           <router-link to="/">
              Products
-          </router-link></li>
-        <li><a href="#">Offers</a></li>
+          </router-link>
+        </li>
         <li>
-        <router-link to="/comparison">
-          Comparison ({{ comparisonList.length }})
-        </router-link>
-      </li>
-        <li><a href="#">Wishlist</a></li>
+          <router-link to="/discounted-products">
+           Offers
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/comparison" @click.prevent="handleComparisonClick">
+            Comparison ({{ comparisonList.length }})
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/wishlist">
+           wishlist
+          </router-link>
+        </li>
+
         <li>
           <router-link to="/cart" @click.prevent="handleCartClick">
              Cart ({{ cart.length }})
@@ -72,14 +105,15 @@ onUnmounted(() => {
       </ul>
 
       <div class="hamburger-menu">&#9776;</div>
-
       
       <div v-if="showLoginForm" class="login-modal">
-      <Login  @close="showLoginForm = false"/>
-    </div>
+        <Login @login-success="handleLoginSuccess" @close="showLoginForm = false"/>
+      </div>
     </nav>
   </header>
 </template>
+
+
 
 
 <style scoped>

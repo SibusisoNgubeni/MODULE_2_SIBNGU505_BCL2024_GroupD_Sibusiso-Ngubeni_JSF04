@@ -77,7 +77,7 @@ const decreaseQuantity = (item) => {
 .cart-container {
     width: 90%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin-top: 100px;
     padding: 20px;
     background-color: #f8f8f8;
     border-radius: 8px;

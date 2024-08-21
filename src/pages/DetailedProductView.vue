@@ -3,11 +3,13 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCartStore } from '../lib/CartStore';
 
+
 const { addToCart } = useCartStore();
 const route = useRoute();
 const product = ref(null);
 const loading = ref(true);
 const error = ref(null);
+const saleEndDate = ref('');
 
 const apiBaseUrl = route.query.api || 'fakestore';
 
@@ -18,7 +20,6 @@ const fetchProduct = async () => {
   if (apiBaseUrl === 'fakestore') {
     url = `https://fakestoreapi.com/products/${id}`;
   } else if (apiBaseUrl === 'escuela') {
-   
     id -= 20;
     url = `https://api.escuelajs.co/api/v1/products/${id}`;
   }
@@ -29,6 +30,14 @@ const fetchProduct = async () => {
       throw new Error('Failed to fetch data');
     }
     product.value = await response.json();
+    
+    
+    if (product.value.discountPercentage) {
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 30) + 1);
+      saleEndDate.value = endDate.toDateString();
+    }
+
   } catch (err) {
     error.value = err.message || 'An error occurred';
   } finally {
@@ -54,7 +63,6 @@ const handleAddToCart = (product) => {
 };
 </script>
 
-
 <template>
   <div>
     <div v-if="loading">Loading...</div>
@@ -79,9 +87,21 @@ const handleAddToCart = (product) => {
           <div class="product-category">
             {{ apiBaseUrl === 'fakestore' ? product.category : product.category.name }}
           </div>
+
+          <div v-if="product.discountPercentage" class="discount-info">
+            <p class="original-price">$ {{ product.originalPrice }}</p>
+            <p class="discounted-price">$ {{ product.discountedPrice }}</p>
+            <p class="discount-percentage">{{ product.discountPercentage }}% OFF</p>
+            <p>Sale Ends: {{ saleEndDate }}</p>
+          </div>
+
+          <div v-else class="product-price">
+            $ {{ product.price }}
+          </div>
+
           <div class="product-description">{{ product.description }}</div>
 
-          <div class="rating" v-if="apiBaseUrl === 'fakestore'">
+          <div v-if="apiBaseUrl === 'fakestore'" class="rating">
             <span class="rating-rate">{{ product.rating ? product.rating.rate : 'N/A' }}</span>
             <span v-for="(star, index) in getRatingStars(product.rating ? product.rating.rate : 0)" :key="index">
               <svg
@@ -100,15 +120,12 @@ const handleAddToCart = (product) => {
             </div>
           </div>
 
-          <div class="product-price">$ {{ product.price }}</div>
           <button @click="handleAddToCart(product)">Add to cart</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-
 
 <style scoped>
   .return-btn {

@@ -18,6 +18,16 @@ const username = ref('');
 const password = ref('');
 const loading = ref(false);
 
+
+const handleLogin = () => {
+  // Replace with your actual login logic
+  const isSuccess = true; // Assume login is successful for demonstration
+
+  if (isSuccess) {
+    // Emit a custom event to notify the parent component
+    emit('login-success');
+  }
+};
 const login = () => {
   loading.value = true;
 
@@ -87,7 +97,7 @@ const logout = () => {
               <label for="password">Password:</label>
               <input v-model="password" type="password" id="password" required />
             </div>
-            <button type="submit" :disabled="loading">Login</button>
+            <button @click="handleLogin">Login</button>
           </form>
         </div>
         <div v-if="show404" class="error-404">

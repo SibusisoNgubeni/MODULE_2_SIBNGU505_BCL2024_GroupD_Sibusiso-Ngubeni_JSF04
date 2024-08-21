@@ -1,6 +1,6 @@
 <script setup>
-import { useWishlistStore } from '../lib/wishlistStore';
-import { useCartStore } from '../lib/cartStore'; // Assuming you have a cart store
+import { useWishlistStore } from '../lib/WishlistStore';
+import { useCartStore } from '../lib/cartStore'; 
 const { items, removeFromWishlist, clearWishlist } = useWishlistStore();
 const { addToCart } = useCartStore();
 </script>

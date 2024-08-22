@@ -27,7 +27,6 @@ export function useCartStore() {
     localStorage.setItem('cart', JSON.stringify(cart.value));
   };
 
-  
   watch(cart, () => {
     updateLocalStorage();
   }, { deep: true });

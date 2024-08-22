@@ -1,9 +1,13 @@
-
- <script setup>
+<script setup>
 import { useWishlistStore } from '../lib/WishlistStore';
 import { useCartStore } from '../lib/cartStore'; 
+
+
 const { items, removeFromWishlist, clearWishlist } = useWishlistStore();
 const { addToCart } = useCartStore();
+
+
+
 </script>
 
 

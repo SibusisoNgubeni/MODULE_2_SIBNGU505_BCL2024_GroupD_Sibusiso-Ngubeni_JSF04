@@ -139,35 +139,34 @@ function handleAddToComparison(product) {
 
 <template>
   <div>
+    <!-- Category and Sorting Components -->
     <CategoryFilter @categoryChange="handleCategoryChange" />
     <Sorting @sortChange="handleSortChange" @reset="handleReset" />
-    
+
+    <!-- Loading Indicator -->
     <div v-if="loading">Loading...</div>
 
+    <!-- Product List -->
     <div v-else-if="filteredProducts.length" class="product-list">
-      <div v-for="product in filteredProducts" :key="product.id" class="product-card">
-        <router-link :to="`/product/${product.id}`" class="link">
-          <img :src="product.images[0]" :alt="product.title" class="product-image" />
-          <h2 class="product-title">{{ product.title }}</h2>
-          <p class="product-price">${{ product.price.toFixed(2) }}</p>
-        </router-link>
-        <button @click="handleAddToCart(product)">Add to Cart</button>
-        <button @click="handleAddToComparison(product)">Add to Comparison</button>
-        <button @click="addToWishlist(product)">Add to Wishlist</button>
-      </div>
-    </div>
-
-    <p v-else>No products available.</p>
-
-   
-    <div>
-      
-      <ul>
-        <li v-for="item in comparisonList" :key="item.id">{{ item.title }}</li>
-      </ul>
+  <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+    <router-link :to="`/product/${product.id}`" class="link">
+      <img :src="product.images[0]" :alt="product.title" class="product-image" />
+      <h2 class="product-title">{{ product.title }}</h2>
+      <p class="product-price">${{ product.price.toFixed(2) }}</p>
+    </router-link>
+    <div class="button-group">
+      <button @click="handleAddToCart(product)">Add to Cart</button>
+      <button @click="handleAddToComparison(product)">Compare</button>
+      <button @click="addToWishlist(product)">Wishlist</button>
     </div>
   </div>
+</div>
+
+<!-- No Products Available Message -->
+<p v-else>No products available.</p>
+  </div>
 </template>
+
 
 
 <style scoped>
@@ -220,21 +219,31 @@ function handleAddToComparison(product) {
   font-size: 20px;
   color: #777;
 }
-button {
-  width: 200px;
+.button-group {
+  display: flex;
+  width: 100%;
+  gap: 5px; 
+  margin-top: 5px;
+}
+
+.button-group button {
+  flex: 1;
+  margin: 5px;
+  padding: 5px;
   background-color: #211f24;
   color: #ffffff;
   border: none;
-
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+}
 
-  margin: 1px;
+.button-group button:hover {
+  background-color: #70b599;
 }
 
 button:hover {
-  background-color: #3700b3;
+  background-color: #70b599;
   transform: translateY(-2px);
 }
 
@@ -247,12 +256,6 @@ button:disabled {
   background-color: #9e9e9e;
   cursor: not-allowed;
 }
-
-button + button {
-  margin-left: 10px;
-}
-
-
 
 @media (max-width: 1200px) {
     .product-card {

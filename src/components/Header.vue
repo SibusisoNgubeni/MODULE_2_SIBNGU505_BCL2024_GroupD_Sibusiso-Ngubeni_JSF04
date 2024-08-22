@@ -5,9 +5,12 @@ import Login from './Login.vue';
 import SkeletonLoader from './SkeletonLoader.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
+import { useWishlistStore } from '../lib/WishlistStore'; 
 
 const { comparisonList } = useComparisonStore();
 const { cart } = useCartStore();
+const { itemCount } = useWishlistStore(); 
+
 const isLoggedIn = ref(false);
 const showLoginForm = ref(false);
 const redirectTo = ref('');
@@ -37,7 +40,6 @@ const handleCartClick = () => handleNavigation('/cart');
 const handleWishlistClick = () => handleNavigation('/wishlist');
 const handleComparisonClick = () => handleNavigation('/comparison');
 
-
 const handleLoginSuccess = () => {
   isLoggedIn.value = true;
   showLoginForm.value = false;
@@ -47,6 +49,11 @@ const handleLoginSuccess = () => {
     redirectTo.value = '';
   }
 };
+
+const handleLogout = () => {
+  isLoggedIn.value = false;
+};
+
 const closeLoginModal = () => {
   showLoginForm.value = false;
   showSkeleton.value = false;
@@ -59,21 +66,19 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
-
-
 </script>
 
 <template>
   <header :class="{ 'scrolled-up': isScrolledUp, 'scrolled-down': !isScrolledUp }">
     <nav class="container">
       <div class="logo">
-      <router-link to="/">
-        <img src="../assets/planet-5-logo.png" class="logo" alt="Planet Logo" />
-      </router-link>
+        <router-link to="/">
+          <img src="../assets/planet-5-logo.png" class="logo" alt="Planet Logo" />
+        </router-link>
       </div>
 
       <ul class="nav-menu">
-        <li><router-link to="/" >Products</router-link></li>
+        <li><router-link to="/">Products</router-link></li>
         <li>Offers</li>
         <li>
           <router-link to="/comparison" @click.prevent="handleComparisonClick">
@@ -82,7 +87,7 @@ onUnmounted(() => {
         </li>
         <li>
           <router-link to="/wishlist" @click.prevent="handleWishlistClick">
-            Wishlist
+            Wishlist ({{ itemCount }}) 
           </router-link>
         </li>
         <li>
@@ -91,6 +96,15 @@ onUnmounted(() => {
           </router-link>
         </li>
       </ul>
+
+      <div>
+        <router-link v-if="!isLoggedIn" to="/login" class="login">
+          Login
+        </router-link>
+        <button v-else @click="handleLogout" class="logout">
+          Logout
+        </button>
+      </div>
 
       <div v-if="showLoginForm">
         <Login @login-success="handleLoginSuccess" @close="closeLoginModal" />
@@ -104,7 +118,12 @@ onUnmounted(() => {
 
 
 
+
 <style scoped>
+.login{
+  color: #ffffff;
+  text-decoration: none;
+}
 header {
   background-color: #333;
   color: #fff;

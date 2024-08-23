@@ -80,28 +80,34 @@ onUnmounted(() => {
       <ul class="nav-menu">
         <li><router-link to="/">Products</router-link></li>
         <li>Offers</li>
-        <li>
+        <li class="comparison-icon">
           <router-link to="/comparison" @click.prevent="handleComparisonClick">
-            Comparison ({{ comparisonList.length }})
+            Comparison 
+            <span class="comparison-badge">{{ comparisonList.length }}</span>
           </router-link>
         </li>
-        <li>
+        <li class="wishlist-icon">
           <router-link to="/wishlist" @click.prevent="handleWishlistClick">
-            Wishlist ({{ itemCount }}) 
+            Wishlist 
+            <span class="wishlist-badge">{{ itemCount }} </span>
           </router-link>
         </li>
-        <li>
+        <li class="cart-icon">
           <router-link to="/cart" @click.prevent="handleCartClick">
-            Cart ({{ cart.length }})
+               <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+               </svg>
+               <span class="cart-badge">{{ cart.length }}</span>
           </router-link>
         </li>
       </ul>
 
       <div>
-        <router-link v-if="!isLoggedIn" to="/login" class="login">
-          Login
+        <router-link v-if="!isLoggedIn" to="/login">
+          <button class="login-btn">Login</button>
+          
         </router-link>
-        <button v-else @click="handleLogout" class="logout">
+        <button v-else @click="handleLogout" class="logout-btn">
           Logout
         </button>
       </div>
@@ -120,9 +126,14 @@ onUnmounted(() => {
 
 
 <style scoped>
-.login{
-  color: #ffffff;
+.login-btn,
+.logout-btn{
+  color: #1a1818;
   text-decoration: none;
+  width: 60px;
+  border-radius: 5px;
+  border: none;
+  
 }
 header {
   background-color: #333;
@@ -198,6 +209,29 @@ header.scrolled-up {
 
 .nav-menu a:hover {
   color: #ffd700;
+}
+
+.cart-icon, 
+.comparison-icon,
+.wishlist-icon {
+  position: relative;
+}
+
+.cart-badge, 
+.comparison-badge,
+.wishlist-badge {
+  position: absolute;
+  top: -8px;  
+  right: -18px; 
+  background-color: rgb(172, 112, 112); 
+  color: white; 
+  border-radius: 50%; 
+  padding: 2px 6px; 
+  font-size: 12px; 
+  line-height: 1; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media screen and (max-width: 768px) {

@@ -30,7 +30,7 @@ const closeLogin = () => {
 <template>
   <div class="login-modal">
     <div class="modal-content">
-      <h2>Login</h2>
+      <h2></h2>
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       <form @submit.prevent="handleLogin">
         <div class="form-group">

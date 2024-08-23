@@ -44,11 +44,14 @@ const fetchData = async (category = '', sort = '') => {
     const data1 = await response1.json();
     let data2 = await response2.json();
 
-    data2 = data2.map(item => ({
+    const offset = 20;
+
+    data2 = data2.slice(0,-8).map((item, index) => ({
       ...item,
-      id: item.id + 20,
+      id: index + 1 + offset,
     }));
 
+    
     let combinedData = [...data1, ...data2];
 
     if (category) {
@@ -155,7 +158,11 @@ function handleAddToComparison(product) {
       <p class="product-price">${{ product.price.toFixed(2) }}</p>
     </router-link>
     <div class="button-group">
-      <button @click="handleAddToCart(product)">Add to Cart</button>
+      <button @click="handleAddToCart(product)">
+        <svg width="20px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 5L19 12H7.37671M20 16H8L6 3H3M16 5.5H13.5M13.5 5.5H11M13.5 5.5V8M13.5 5.5V3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
       <button @click="handleAddToComparison(product)">Compare</button>
       <button @click="addToWishlist(product)">Wishlist</button>
     </div>

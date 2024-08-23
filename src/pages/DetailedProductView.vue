@@ -3,7 +3,6 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCartStore } from '../lib/CartStore';
 
-
 const { addToCart } = useCartStore();
 const route = useRoute();
 const product = ref(null);
@@ -14,13 +13,12 @@ const saleEndDate = ref('');
 const apiBaseUrl = route.query.api || 'fakestore';
 
 const fetchProduct = async () => {
-  let id = parseInt(route.params.id, 10);
+  const id = parseInt(route.params.id, 10);
   let url = '';
 
   if (apiBaseUrl === 'fakestore') {
     url = `https://fakestoreapi.com/products/${id}`;
   } else if (apiBaseUrl === 'escuela') {
-    id -= 20;
     url = `https://api.escuelajs.co/api/v1/products/${id}`;
   }
 
@@ -30,12 +28,14 @@ const fetchProduct = async () => {
       throw new Error('Failed to fetch data');
     }
     product.value = await response.json();
-    
-    
-    if (product.value.discountPercentage) {
+
+    // Calculate sale end date if applicable
+    if (apiBaseUrl === 'fakestore' && product.value.discountPercentage) {
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 30) + 1);
       saleEndDate.value = endDate.toDateString();
+    } else if (apiBaseUrl === 'escuela') {
+      saleEndDate.value = ''; // No discount handling for Escuela API
     }
 
   } catch (err) {
@@ -79,16 +79,16 @@ const handleAddToCart = (product) => {
         <div class="product-card">
           <div class="product-title">{{ product.title }}</div>
           <div>
-            <img :src="apiBaseUrl === 'fakestore' ? product.image : product.images[0]" alt="Product Image" class="product-image"/>
+            <img :src="apiBaseUrl === 'fakestore' ? product.image : (product.images && product.images[0])" alt="Product Image" class="product-image"/>
           </div>
         </div>
 
         <div class="info-block">
           <div class="product-category">
-            {{ apiBaseUrl === 'fakestore' ? product.category : product.category.name }}
+            {{ apiBaseUrl === 'fakestore' ? product.category : (product.category && product.category.name) }}
           </div>
 
-          <div v-if="product.discountPercentage" class="discount-info">
+          <div v-if="apiBaseUrl === 'fakestore' && product.discountPercentage" class="discount-info">
             <p class="original-price">$ {{ product.originalPrice }}</p>
             <p class="discounted-price">$ {{ product.discountedPrice }}</p>
             <p class="discount-percentage">{{ product.discountPercentage }}% OFF</p>
@@ -120,12 +120,17 @@ const handleAddToCart = (product) => {
             </div>
           </div>
 
-          <button @click="handleAddToCart(product)">Add to cart</button>
+          <button @click="handleAddToCart(product)">
+            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M21 5L19 12H7.37671M20 16H8L6 3H3M16 5.5H13.5M13.5 5.5H11M13.5 5.5V8M13.5 5.5V3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <style scoped>
   .return-btn {

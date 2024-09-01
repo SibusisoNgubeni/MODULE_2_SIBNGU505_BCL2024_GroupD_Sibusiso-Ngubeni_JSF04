@@ -8,14 +8,7 @@ import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
 import { useWishlistStore } from '../lib/WishListStore';
 
-
 const { addToWishlist } = useWishlistStore();
-
-const props = defineProps({
-  product: Object,
-});
-
-
 const { addToComparison, comparisonList } = useComparisonStore();
 const { addToCart } = useCartStore();
 const { setCategory, setSortOption, resetFilters, getCategory, getSortOption } = ProductStore();
@@ -32,38 +25,16 @@ const fetchData = async (category = '', sort = '') => {
     ? `https://fakestoreapi.com/products/category/${category}`
     : 'https://fakestoreapi.com/products';
 
-  const url2 = 'https://api.escuelajs.co/api/v1/products';
-
   try {
-    const [response1, response2] = await Promise.all([fetch(url1), fetch(url2)]);
+    const response = await fetch(url1);
 
-    if (!response1.ok || !response2.ok) {
+    if (!response.ok) {
       throw new Error('Network response was not ok');
     }
 
-    const data1 = await response1.json();
-    let data2 = await response2.json();
+    const data = await response.json();
 
-    const offset = 20;
-
-    data2 = data2.slice(0,-8).map((item, index) => ({
-      ...item,
-      id: index + 1 + offset,
-    }));
-
-    
-    let combinedData = [...data1, ...data2];
-
-    if (category) {
-      combinedData = combinedData.filter(item => {
-        if (item.category && item.category.name) {
-          return item.category.name.toLowerCase() === category.toLowerCase();
-        } else if (typeof item.category === 'string') {
-          return item.category.toLowerCase() === category.toLowerCase();
-        }
-        return false;
-      });
-    }
+    let combinedData = [...data];
 
     if (sort) {
       combinedData = applySort(combinedData, sort);
@@ -71,11 +42,11 @@ const fetchData = async (category = '', sort = '') => {
 
     combinedData = combinedData.map(item => ({
       ...item,
-      images: item.images || [item.image],
+      images: item.images || [item.image], // Ensure 'images' array exists
     }));
 
-    products.value = combinedData;
-    filteredProducts.value = combinedData;
+    products.value = [...combinedData];
+    filteredProducts.value = [...combinedData];
   } catch (err) {
     console.error(err);
     products.value = [];
@@ -122,12 +93,8 @@ onMounted(() => {
   fetchData(getCategory.value, getSortOption.value);
 });
 
-watch(() => getCategory.value, (newCategory) => {
-  fetchData(newCategory, getSortOption.value);
-});
-
-watch(() => getSortOption.value, (newSort) => {
-  fetchData(getCategory.value, newSort);
+watch([() => getCategory.value, () => getSortOption.value], ([newCategory, newSort]) => {
+  fetchData(newCategory, newSort);
 });
 
 const handleAddToCart = (product) => {
@@ -138,6 +105,7 @@ const handleAddToCart = (product) => {
 function handleAddToComparison(product) {
   addToComparison(product);
 }
+
 </script>
 
 <template>
@@ -151,32 +119,37 @@ function handleAddToComparison(product) {
 
     <!-- Product List -->
     <div v-else-if="filteredProducts.length" class="product-list">
-  <div v-for="product in filteredProducts" :key="product.id" class="product-card">
-    <router-link :to="`/product/${product.id}`" class="link">
-      <img :src="product.images[0]" :alt="product.title" class="product-image" />
-      <h2 class="product-title">{{ product.title }}</h2>
-      <p class="product-price">${{ product.price.toFixed(2) }}</p>
-    </router-link>
-    <div class="button-group">
-      <button @click="handleAddToCart(product)">
-        <svg width="20px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 5L19 12H7.37671M20 16H8L6 3H3M16 5.5H13.5M13.5 5.5H11M13.5 5.5V8M13.5 5.5V3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <button @click="handleAddToComparison(product)">Compare</button>
-      <button @click="addToWishlist(product)">Wishlist</button>
+      <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+        <router-link :to="`/product/${product.id}`" class="link">
+          <img :src="product.images[0]" :alt="product.title" class="product-image" />
+          <h2 class="product-title">{{ product.title }}</h2>
+          <p class="product-price">${{ product.price.toFixed(2) }}</p>
+        </router-link>
+        <div class="button-group">
+          <button @click="handleAddToCart(product)">
+            <svg class="cart-icon" width="20px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 5L19 12H7.37671M20 16H8L6 3H3M16 5.5H13.5M13.5 5.5H11M13.5 5.5V8M13.5 5.5V3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="text" @click="handleAddToComparison(product)"><span class="text">Compare</span></button>
+          <button @click="addToWishlist(product)"><span class="text">Wishlist</span></button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- No Products Available Message -->
-<p v-else>No products available.</p>
+    <!-- No Products Available Message -->
+    <p v-else>No products available.</p>
   </div>
 </template>
 
 
 
+
 <style scoped>
+.text{
+  color: #000;
+}
+
 .link{
   text-decoration: none;
 }

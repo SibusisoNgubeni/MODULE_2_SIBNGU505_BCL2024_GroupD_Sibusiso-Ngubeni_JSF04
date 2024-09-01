@@ -78,17 +78,18 @@ onUnmounted(() => {
       </div>
 
       <ul class="nav-menu">
-        <li><router-link to="/">Products</router-link></li>
-        <li>Offers</li>
+        <li><router-link to="/">
+          <span class="text">Products</span></router-link></li>
+        <li><span class="text">Offers</span></li>
         <li class="comparison-icon">
           <router-link to="/comparison" @click.prevent="handleComparisonClick">
-            Comparison 
+            <span class="text">Comparison </span>
             <span class="comparison-badge">{{ comparisonList.length }}</span>
           </router-link>
         </li>
         <li class="wishlist-icon">
           <router-link to="/wishlist" @click.prevent="handleWishlistClick">
-            Wishlist 
+            <span class="text">Wishlist </span>
             <span class="wishlist-badge">{{ itemCount }} </span>
           </router-link>
         </li>
@@ -126,6 +127,9 @@ onUnmounted(() => {
 
 
 <style scoped>
+.text{
+  color: #000;
+}
 .login-btn,
 .logout-btn{
   color: #1a1818;

@@ -1,6 +1,6 @@
 <script setup>
 import { useWishlistStore } from '../lib/WishListStore';
-import { useCartStore } from '../lib/cartStore'; 
+import { useCartStore } from '../lib/CartStore'; 
 
 
 const { items, removeFromWishlist, clearWishlist } = useWishlistStore();

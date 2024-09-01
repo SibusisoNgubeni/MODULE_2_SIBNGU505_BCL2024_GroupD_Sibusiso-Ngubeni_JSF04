@@ -5,7 +5,7 @@ import Login from './Login.vue';
 import SkeletonLoader from './SkeletonLoader.vue';
 import { useCartStore } from '../lib/CartStore';
 import { useComparisonStore } from '../lib/ComparisonStore';
-import { useWishlistStore } from '../lib/WishlistStore'; 
+import { useWishlistStore } from '../lib/WishListStore'; 
 
 const { comparisonList } = useComparisonStore();
 const { cart } = useCartStore();

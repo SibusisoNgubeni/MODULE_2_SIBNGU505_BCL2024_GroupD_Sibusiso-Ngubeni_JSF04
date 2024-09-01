@@ -1,5 +1,5 @@
 <script setup>
-import { useWishlistStore } from '../lib/WishlistStore';
+import { useWishlistStore } from '../lib/WishListStore';
 import { useCartStore } from '../lib/cartStore'; 
 
 

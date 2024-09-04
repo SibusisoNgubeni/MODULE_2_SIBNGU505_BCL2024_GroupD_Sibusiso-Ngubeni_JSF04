@@ -1,6 +1,6 @@
 # Vue 3 eCommerce store
 
-##Deployment link
+## Deployment link
 https://vercel.com/sibusisongubenis-projects/sibusisongubenivueproject/73Rym5fyhG6h7uNu3EBEEv9Dqn16
 
 ## Overview
@@ -13,7 +13,7 @@ This project is a Vue.js application designed to showcase product listing and pr
 4. Persistent Filters: Maintains filter settings across navigation and page refreshes.
 
 
-##Usage
+## Usage
 users can browse products, see product details on a detailed view page and add items to wishlist, comparison list and cart, upon clicking on either to view items in the comparison list, user is prompted 
 to log in as comparison page, cart and wishlist are protected routes
 
